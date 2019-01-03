@@ -1,0 +1,24 @@
+<h1>Trivia!</h1>
+
+<div class="broadcaster-dashboard">
+    <div class="new-quiz">
+        <h3>Start new Quiz</h3>
+        <div>
+            <ul class="quizzes">
+                <li *ngFor="let quiz of quizzes">
+                    <a routerLink="/start/{quiz.id}">{quiz.title}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <h4>Past Contests</h4>
+        <div>
+            <ul class="quizzes">
+                <li *ngFor="let channelQuiz of pastQuizzes">
+                    <a routerLink="/results/{channelQuiz.id}">{quiz.title}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
