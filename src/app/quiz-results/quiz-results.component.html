@@ -1,0 +1,12 @@
+<div>
+  <h2 class="main-heading">
+    Quiz - {{quizResults.quiz.title}}
+  </h2>
+  <h4 class="sub-heading">Results</h4>
+  <div>
+    Average score: {{quizResults.average}}
+  </div>
+  <ul>
+    <li *ngFor="let result of viewerResults">{{result.name}} - {{result.score}}</li>
+  </ul>
+</div>
