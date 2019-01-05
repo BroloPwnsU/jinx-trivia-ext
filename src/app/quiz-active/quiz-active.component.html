@@ -3,6 +3,9 @@
   <div class="question-timer">
     Timer: {{secondsLeft}} seconds
   </div>
+  <div *ngIf="hostMode">
+    <button (click)="nextQuestion()">Next Question</button>
+  </div>
   <div>
     Question {{currentQuestion.QuestionNumber}} of {{activeQuiz.NumberOfQuestions}}:
     <br />
@@ -11,7 +14,7 @@
   <div>
     <ul>
       <li *ngFor="let answer in currentQuestion.Answers">
-        <button *ngIf="playerMode && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
+        <button *ngIf="hostMode == false && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
         {{answer.Caption}}
       </li>
     </ul>

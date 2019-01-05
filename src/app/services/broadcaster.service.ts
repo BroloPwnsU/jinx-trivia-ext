@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import {MessageService} from './message.service';
 import {UserService} from './user.service';
@@ -16,11 +16,14 @@ export class BroadcasterService implements OnInit {
 
     broadcasterUrl: string = "https://8tvnwrbrze.execute-api.us-east-2.amazonaws.com/default/trivia-broadcaster";
 
+    activeQuiz: Quiz = null;
+
     getQuizList(): Observable<Quiz[]> {
         const payload = {
             'action': 'getquizlist'
         };
 
+        //Won't get the questions, just the quiz titles and basic deets.
         return this.authHttp.post<Quiz>(this.broadcasterUrl, JSON.stringify(payload)).pipe(
             //tap(order => { this.order = <Order>order; }),
             catchError(this.handleError(payload.action, null))
@@ -33,31 +36,36 @@ export class BroadcasterService implements OnInit {
             quizId: quizId
         };
 
+        //Won't get the whole quiz, just some basic details.
         return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
             //tap(order => { this.order = <Order>order; }),
             catchError(this.handleError(payload.action, null))
         );
     }
 
-    startQuiz(quizId: number): Observable<QuizResults> {
+    startQuiz(quizId: number): Observable<Quiz> {
         const payload = {
             action: 'startquiz',
             quizId: quizId
         }
 
-        return this.authHttp.post<QuizResults>(this.broadcasterUrl, payload).pipe(
-            //tap(order => { this.order = <Order>order; }),
+        return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
+            tap(activeQuiz => { this.activeQuiz = <Quiz>activeQuiz; }),
             catchError(this.handleError(payload.action, null))
         );
     }
 
-    nextQuestion(): Observable<QuizResults> {
+    nextQuestion(): Observable<Quiz> {
         const payload = {
-            action: 'nextquestion'
+            action: 'nextquestion',
+            quizId: this.activeQuiz.QuizID
         };
 
-        return this.authHttp.post<QuizResults>(this.broadcasterUrl, payload).pipe(
-            //tap(order => { this.order = <Order>order; }),
+        return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
+            tap(quiz => { 
+                this.activeQuiz.CurrentQuestion = quiz.CurrentQuestion;
+                this.activeQuiz.Questions[this.activeQuiz.CurrentQuestion] = quiz.Questions[quiz.CurrentQuestion];
+            }),
             catchError(this.handleError(payload.action, null))
         );
     }
