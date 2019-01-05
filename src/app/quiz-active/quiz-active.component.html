@@ -1,0 +1,24 @@
+
+<div *ngIf="currentQuestion">
+  <div class="question-timer">
+    Timer: {{secondsLeft}} seconds
+  </div>
+  <div>
+    Question {{currentQuestion.QuestionNumber}} of {{activeQuiz.NumberOfQuestions}}:
+    <br />
+    {{currentQuestion.Caption}}
+  </div>
+  <div>
+    <ul>
+      <li *ngFor="let answer in currentQuestion.Answers">
+        <button *ngIf="playerMode && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
+        {{answer.Caption}}
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="question-loading">
+  {{loadingMessage}}
+  <br />
+  --Loading image--
+</div>
