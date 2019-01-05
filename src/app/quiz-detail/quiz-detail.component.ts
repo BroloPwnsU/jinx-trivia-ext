@@ -25,9 +25,15 @@ export class QuizDetailComponent implements OnInit {
 
   startQuiz(): void {
     //Need to initialize the results portion of the quiz.
-    //Create a TwitchChannelQuiz record.
+    //Create a Quiz record for this Channel. Set current question to 0.
+    // -> If the record already exists, reset the current question to 0.
     //Create a TwitchChannel record, if necessary.
-    //Set the TwitchChannel record equal to the 
+    //Set the TwitchChannel ActiveQuizID setting to this quiz ID
+    this.broadcasterService.startQuiz(this.quiz.QuizID);
+    //Redirect to the active quiz page. This page will have the timer that
+    // triggers the next questions and shows the active question.
+    //Interface can be very similar to the viewer's interface, minus the voting button.
+    this.location.go("active");
   }
 
   constructor(
