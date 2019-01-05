@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MessagesComponent } from './messages/messages.component';
 import { QuizStartComponent } from './quiz-start/quiz-start.component';
 import { QuizResultsComponent } from './quiz-results/quiz-results.component';
+import { QuizDetailComponent } from './quiz-detail/quiz-detail.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { QuizResultsComponent } from './quiz-results/quiz-results.component';
     DashboardComponent,
     MessagesComponent,
     QuizStartComponent,
-    QuizResultsComponent
+    QuizResultsComponent,
+    QuizDetailComponent
   ],
   imports: [
     HttpClientModule,

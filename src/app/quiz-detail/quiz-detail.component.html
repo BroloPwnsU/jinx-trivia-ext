@@ -1,0 +1,30 @@
+
+<div>
+  <a href="#" routerLink="dashboard">&lt; Back to quiz list</a>
+</div>
+
+<div *ngIf="quiz == null">
+  Loading quiz...
+</div>
+<div *ngIf="quiz">
+  <h3>
+    Quiz #{{quiz.quizId}}: {{quiz.title}}
+  </h3>
+  <div>
+    <button (click)="startQuiz()">Start Quiz</button>
+  </div>
+  <div class="description">
+    {{quiz.description}}
+  </div>
+  <div>
+    Times Taken: {{quiz.timesTaken}}
+  </div>
+  <div>
+    Questions:
+    <ol>
+      <li *ngFor="let question of quiz.questions">
+        {{question.text}}
+      </li>
+    </ol>
+  </div>
+</div>
