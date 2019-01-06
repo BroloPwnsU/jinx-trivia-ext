@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { MessageService } from '../services/message.service';
 import { BroadcasterService } from '../services/broadcaster.service';
@@ -15,10 +15,10 @@ export class QuizDetailComponent implements OnInit {
   quiz: Quiz;
 
   loadQuiz(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
     this.broadcasterService.getQuiz(id)
       .subscribe(
-        (quiz) => { this.quiz = quiz; this.messageService.add(JSON.stringify(quiz)); },
+        (quiz) => { this.quiz = quiz; },
         (error) => { this.messageService.add(error); }
         );
   }
@@ -29,18 +29,21 @@ export class QuizDetailComponent implements OnInit {
     // -> If the record already exists, reset the current question to 0.
     //Create a TwitchChannel record, if necessary.
     //Set the TwitchChannel ActiveQuizID setting to this quiz ID
-    this.broadcasterService.startQuiz(this.quiz.QuizID);
+    this.broadcasterService.startQuiz(this.quiz.QuizID).subscribe(
+      (quiz) => { this.router.navigateByUrl('/active'); },
+      (err) => { this.messageService.add(err); }
+    );
     //Redirect to the active quiz page. This page will have the timer that
     // triggers the next questions and shows the active question.
     //Interface can be very similar to the viewer's interface, minus the voting button.
-    this.location.go("active");
+    
   }
 
   constructor(
     private messageService: MessageService,
     private broadcasterService: BroadcasterService,
     private route: ActivatedRoute,
-    private location: Location
+		private router: Router
   ) { }
 
   ngOnInit() {
