@@ -1,12 +1,13 @@
 export class Quiz {
-    title: string;
-    description: string;
-    QuizID: number;
-    CurrentQuestion: number;
+    Title: string;
+    Description: string;
+    QuizID: string;
+    CurrentQuestionIndex: number;
     NumberOfQuestions: number;
     AverageScore: number;
     TimesTaken: number;
     
+    NextQuestion: Question;
     Questions: Question[];
 }
 

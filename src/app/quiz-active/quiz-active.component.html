@@ -1,4 +1,6 @@
-
+<p>
+  <a href="#" routerLink="/dashboard">Back to Dashboard</a>
+</p>
 <div *ngIf="currentQuestion">
   <div class="question-timer">
     Timer: {{secondsLeft}} seconds
@@ -7,13 +9,13 @@
     <button (click)="nextQuestion()">Next Question</button>
   </div>
   <div>
-    Question {{currentQuestion.QuestionNumber}} of {{activeQuiz.NumberOfQuestions}}:
+    Question {{activeQuiz.CurrentQuestionIndex + 1}} of {{activeQuiz.NumberOfQuestions}}:
     <br />
     {{currentQuestion.Caption}}
   </div>
   <div>
     <ul>
-      <li *ngFor="let answer in currentQuestion.Answers">
+      <li *ngFor="let answer of currentQuestion.Answers">
         <button *ngIf="hostMode == false && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
         {{answer.Caption}}
       </li>

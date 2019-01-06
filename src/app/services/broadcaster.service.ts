@@ -30,10 +30,10 @@ export class BroadcasterService implements OnInit {
         );
     }
 
-    getQuiz(quizId: number): Observable<Quiz> {
+    getQuiz(quizId: string): Observable<Quiz> {
         const payload = {
             action: 'getquiz',
-            quizId: quizId
+            QuizID: quizId
         };
 
         //Won't get the whole quiz, just some basic details.
@@ -43,14 +43,17 @@ export class BroadcasterService implements OnInit {
         );
     }
 
-    startQuiz(quizId: number): Observable<Quiz> {
+    startQuiz(quizID: string): Observable<Quiz> {
         const payload = {
             action: 'startquiz',
-            quizId: quizId
+            QuizID: quizID
         }
 
         return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
-            tap(activeQuiz => { this.activeQuiz = <Quiz>activeQuiz; }),
+            tap(activeQuiz => {
+                this.activeQuiz = <Quiz>activeQuiz;
+                this.messageService.add(activeQuiz.Title);
+            }),
             catchError(this.handleError(payload.action, null))
         );
     }
@@ -58,13 +61,17 @@ export class BroadcasterService implements OnInit {
     nextQuestion(): Observable<Quiz> {
         const payload = {
             action: 'nextquestion',
-            quizId: this.activeQuiz.QuizID
+            QuizID: this.activeQuiz.QuizID
         };
 
         return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
-            tap(quiz => { 
-                this.activeQuiz.CurrentQuestion = quiz.CurrentQuestion;
-                this.activeQuiz.Questions[this.activeQuiz.CurrentQuestion] = quiz.Questions[quiz.CurrentQuestion];
+            tap(quiz => {
+                //First save the last question.
+                this.activeQuiz[quiz.CurrentQuestionIndex] = this.activeQuiz.NextQuestion;
+
+                //Now set the next question from the one that was returned.
+                this.activeQuiz.CurrentQuestionIndex = quiz.CurrentQuestionIndex;
+                this.activeQuiz.NextQuestion = quiz.NextQuestion;
             }),
             catchError(this.handleError(payload.action, null))
         );
@@ -100,6 +107,5 @@ export class BroadcasterService implements OnInit {
     }
     
     ngOnInit(): void {
-        console.log("broadcaster service");
     }
 }

@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { Quiz, Question, Answer } from '../classes/quiz';
 import { MessageService } from '../services/message.service';
 import { BroadcasterService } from '../services/broadcaster.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quiz-active',
@@ -26,20 +27,36 @@ export class QuizActiveComponent implements OnInit {
     this.activeQuiz = this.broadcasterService.activeQuiz;
 
     if (this.activeQuiz != null) {
-      if (this.activeQuiz.CurrentQuestion > 0) {
-        this.currentQuestion = this.activeQuiz.Questions[this.activeQuiz.CurrentQuestion];
+      if (this.activeQuiz.NextQuestion != null && this.activeQuiz.CurrentQuestionIndex >= 0) {
+        this.activeQuiz[this.activeQuiz.CurrentQuestionIndex] = this.activeQuiz.NextQuestion;
+        this.currentQuestion = this.activeQuiz.NextQuestion;
+      }
+      else {
+        //No current question... error.
+        this.messageService.add("No current question.");
+        this.router.navigateByUrl('/dashboard');
       }
     }
     else {
       this.messageService.add("No active quiz.");
-      this.location.go("dashboard");
+      this.router.navigateByUrl('/dashboard');
     }
+  }
+
+  nextQuestion(): void {
+    this.broadcasterService.nextQuestion().subscribe(
+      (quiz) => {
+        this.activeQuiz = this.broadcasterService.activeQuiz;
+        this.currentQuestion = this.activeQuiz.NextQuestion;
+      },
+      (err) => { this.messageService.add(err); }
+    );
   }
 
   constructor(
     private broadcasterService: BroadcasterService,
     private messageService: MessageService,
-    private location: Location
+    private router: Router
   ) { }
 
   ngOnInit() {
