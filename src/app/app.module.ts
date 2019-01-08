@@ -10,6 +10,7 @@ import { QuizStartComponent } from './quiz-start/quiz-start.component';
 import { QuizResultsComponent } from './quiz-results/quiz-results.component';
 import { QuizDetailComponent } from './quiz-detail/quiz-detail.component';
 import { QuizActiveComponent } from './quiz-active/quiz-active.component';
+import { QuizManagerComponent } from './quiz-manager/quiz-manager.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { QuizActiveComponent } from './quiz-active/quiz-active.component';
     QuizStartComponent,
     QuizResultsComponent,
     QuizDetailComponent,
-    QuizActiveComponent
+    QuizActiveComponent,
+    QuizManagerComponent
   ],
   imports: [
     HttpClientModule,

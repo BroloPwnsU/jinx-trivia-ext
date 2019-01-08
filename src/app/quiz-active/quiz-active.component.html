@@ -6,7 +6,7 @@
     Timer: {{secondsLeft}} seconds
   </div>
   <div *ngIf="hostMode">
-    <button (click)="nextQuestion()">Next Question</button>
+    <app-quiz-manager></app-quiz-manager>
   </div>
   <div>
     Question {{activeQuiz.CurrentQuestionIndex + 1}} of {{activeQuiz.NumberOfQuestions}}:
@@ -22,8 +22,8 @@
     </ul>
   </div>
 </div>
-<div class="question-loading">
-  {{loadingMessage}}
+<div *ngIf="currentQuestion == null" class="question-loading">
+  Please wait while we load the next question...
   <br />
   --Loading image--
 </div>

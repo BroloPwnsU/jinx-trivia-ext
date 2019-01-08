@@ -1,5 +1,9 @@
 <h1>Trivia!</h1>
 
-<router-outlet></router-outlet>
-
+<div *ngIf="authLoaded">
+    <router-outlet></router-outlet>
+</div>
+<div *ngIf="authLoaded == false">
+    <button (click)="fakeAuth()">Fake Auth</button>
+</div>
 <app-messages></app-messages>

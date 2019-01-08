@@ -30,6 +30,14 @@ export class AuthHttpClient {
       );
   }
 
+  postInsecure<T>(url: string, data): Observable<T> {
+      
+      return <Observable<T>>this.http.post(
+          url
+          , data
+      );
+  }
+
   appendAuthParams(authUrl: string): string {
     let authParams: string = this.userService.buildUserAuthParams(false);
     if (authUrl.indexOf("?") > -1) {
