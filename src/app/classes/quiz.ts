@@ -16,6 +16,8 @@ export class Question {
     Explanation: string;
     QuestionNumber: number;
 
+    CorrectAnswer: Answer;
+
     Answers: Answer[];
 }
 
