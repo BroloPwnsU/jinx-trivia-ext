@@ -27,6 +27,13 @@ export class QuizActiveComponent implements OnInit {
   //Current question will be provided by the pubsub messages.
   currentQuestion: Question = null;
   selectedAnswer: Answer = null;
+  correct: boolean = false;
+
+  questionTimerSeconds: number = 10;
+  answerTimerSeconds: number = 5;
+  timerIncrements: number = 0.1;
+  timerRemaining: number = 0;
+  waitingForNext: boolean = false;
 
   loadActiveQuiz(): void {
     this.activeQuiz = this.broadcasterService.activeQuiz;
@@ -56,16 +63,55 @@ export class QuizActiveComponent implements OnInit {
 
         var payloadObj = JSON.parse(payload);
 
-        this.currentQuestion = payloadObj.message.NextQuestion;
+        //If there's a previous answer, attach it to the question.
+        if (payloadObj.message.CorrectAnswer != null && this.selectedAnswer != null) {
+          this.currentQuestion.CorrectAnswer = payloadObj.message.CorrectAnswer;
+          
+          if (this.selectedAnswer.Letter == this.currentQuestion.CorrectAnswer.Letter) {
+            this.correct = true;
+          }
+          else {
+            this.correct = false;
+          }
+        }
 
-        //this.currentAnswer = payloadObj.message.currentAnswer;
-        //this.nextQuestion = payloadObj.message.NextQuestion;
-
-        //if (this.currentAnswer != null) {
-          //Show the answer for a few seconds, then go to the next question.
-        //}
+        this.startAnswerScreen();
       });      
     });
+  }
+
+  startAnswerScreen(): void {
+    this.timerRemaining = this.answerTimerSeconds;
+    this.tickTimer(() => {
+      //Answer timer is over. They've read about they're wrongdoing. Now show the next question.
+      this.currentQuestion = this.activeQuiz.NextQuestion;
+      this.currentQuestion.CorrectAnswer = null;
+
+      this.startQuestionScreen();
+    });
+  }
+
+  startQuestionScreen(): void {
+    this.timerRemaining = this.questionTimerSeconds;
+    this.tickTimer(() => {
+      //Question timer is over... but we don't kick over until the twitch listener receives a new question.
+      //Timer will disappear, but we need the answers to disappear, too.
+      //This boolean will hide those answers.
+      this.waitingForNext = true;
+    });
+  }
+
+  tickTimer(callback): void {
+    //Recursively set tiny timers until the overall timer is down to zero.
+    if (this.timerRemaining > 0) {
+      this.timerRemaining -= this.timerIncrements;
+      if (this.timerRemaining < 0) this.timerRemaining = 0;
+      setTimeout(() => {this.tickTimer(callback)}, this.timerIncrements);
+    }
+    else {
+      //Timer is over. Activate Order 66.
+      callback();
+    }
   }
 
   constructor(

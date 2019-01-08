@@ -1,19 +1,41 @@
 <p>
   <a href="#" routerLink="/dashboard">Back to Dashboard</a>
 </p>
-<div *ngIf="currentQuestion">
-  <div class="question-timer">
-    Timer: {{secondsLeft}} seconds
-  </div>
+<div *ngIf="currentQuestion != null">
   <div *ngIf="hostMode">
     <app-quiz-manager></app-quiz-manager>
   </div>
+
+  <div *ngIf="timerRemaining > 0" class="question-timer">
+      Timer: {{timerRemaining}} seconds
+    </div>
   <div>
     Question {{activeQuiz.CurrentQuestionIndex + 1}} of {{activeQuiz.NumberOfQuestions}}:
     <br />
     {{currentQuestion.Caption}}
   </div>
-  <div>
+  <div *ngIf="currentQuestion.CorrectAnswer != null">
+    <div *ngIf="correct" class="">
+      Correct!
+    </div>
+    <div *ngIf="correct == false" class="">
+      Wrong!
+    </div>
+    <div class="correct-answer">
+      Correct Answer: {{currentQuestion.CorrectAnswer.Letter}} {{currentQuestion.CorrectAnswer.Caption}}
+    </div>
+    <div class="explanation">
+      {{currentQuestion.CorrectAnswer.Description}}
+    </div>
+  </div>
+  <div *ngIf="waitingForNext">
+    Waiting for next question...
+  </div>
+  <div *ngIf="selectedAnswer != null">
+    My Answer:
+    {{selectedAnswer.Letter}} - {{selectedAnswer.Caption}}
+  </div>
+  <div *ngIf="selectedAnswer == null && waitingForNext == false">
     <ul>
       <li *ngFor="let answer of currentQuestion.Answers">
         <button *ngIf="hostMode == false && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
