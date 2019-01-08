@@ -9,16 +9,11 @@ declare var window: any;
 const nextQuestionTargetTopic: string = "nextquestion"; 
 
 @Component({
-  selector: 'app-quiz-active',
-  templateUrl: './quiz-active.component.html',
-  styleUrls: ['./quiz-active.component.css']
+  selector: 'app-quiz-manager',
+  templateUrl: './quiz-manager.component.html',
+  styleUrls: ['./quiz-manager.component.css']
 })
-export class QuizActiveComponent implements OnInit {
-
-  devMode: boolean = false;
-
-  //Hosts will be able to trigger the next question, but can't vote.
-  hostMode: boolean = true;
+export class QuizManagerComponent implements OnInit {
 
    //The quiz won't have any questions or answers in it to start, just title.
    // These will be added via pubsub messages.
@@ -47,6 +42,23 @@ export class QuizActiveComponent implements OnInit {
       this.router.navigateByUrl('/dashboard');
     }
   }
+  
+  nextQuestion(): void {
+    this.broadcasterService.nextQuestion().subscribe(
+      (quiz) => {
+        this.activeQuiz = this.broadcasterService.activeQuiz;
+
+        //Send a pubsub message to all the viewers so they get the new question.
+        //The pubsub message will also come back to this panel.
+        window.Twitch.ext.send(
+          "broadcast",
+          "application/json",
+          {"content_type":"application/json", "message":{"NextQuestion": this.activeQuiz.NextQuestion}, "targets":["broadcast"]}
+        );
+      },
+      (err) => { this.messageService.add(err); }
+    );
+  }
 
   listenForQuestions(): void {
     //Starts listening for questions to come in over the "nextquestion" blurb
@@ -55,15 +67,7 @@ export class QuizActiveComponent implements OnInit {
         this.messageService.debug("Listen payload: " + payload);
 
         var payloadObj = JSON.parse(payload);
-
         this.currentQuestion = payloadObj.message.NextQuestion;
-
-        //this.currentAnswer = payloadObj.message.currentAnswer;
-        //this.nextQuestion = payloadObj.message.NextQuestion;
-
-        //if (this.currentAnswer != null) {
-          //Show the answer for a few seconds, then go to the next question.
-        //}
       });      
     });
   }

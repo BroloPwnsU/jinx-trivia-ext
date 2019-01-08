@@ -11,7 +11,7 @@ declare var amazon: any;
 })
 export class UserService  {
 
-	userAuth: TwitchAuth = this.fakeTwitchAuth();
+	userAuth: TwitchAuth = null; // this.fakeTwitchAuth();
 	userAuthStorageKey: string = "app-user-auth";
 
 	accessToken: string;
@@ -87,9 +87,9 @@ export class UserService  {
         this.userAuth = userAuth;
 		this.storeTwitchAuth(this.userAuthStorageKey, this.userAuth);
 
-        this.messageService.debug(`Set Twitch user userId(${userAuth.userId})`);
-        this.messageService.debug(`Set Twitch user token(${userAuth.token})`);
-        this.messageService.debug(`Set Twitch user channelId(${userAuth.channelId})`);
+        //this.messageService.debug(`Set Twitch user userId(${userAuth.userId})`);
+        //this.messageService.debug(`Set Twitch user token(${userAuth.token})`);
+        //this.messageService.debug(`Set Twitch user channelId(${userAuth.channelId})`);
     }
 
     getUserAuth(): TwitchAuth {

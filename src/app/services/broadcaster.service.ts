@@ -8,6 +8,7 @@ import {AuthHttpClient} from './auth-http-client.service';
 
 import {Quiz} from '../classes/quiz';
 import {QuizResults} from '../classes/quiz-results';
+import { TwitchAuth } from '../classes/twitch-auth';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class BroadcasterService implements OnInit {
 
         //Won't get the questions, just the quiz titles and basic deets.
         return this.authHttp.post<Quiz>(this.broadcasterUrl, JSON.stringify(payload)).pipe(
-            //tap(order => { this.order = <Order>order; }),
+            tap(blah => { this.messageService.debug("getquizlist response: " + blah); if ((<any>blah).toker != null) this.messageService.debug("toker: " + (<any>blah).toker); }),
             catchError(this.handleError(payload.action, null))
         );
     }
@@ -73,6 +74,17 @@ export class BroadcasterService implements OnInit {
                 this.activeQuiz.CurrentQuestionIndex = quiz.CurrentQuestionIndex;
                 this.activeQuiz.NextQuestion = quiz.NextQuestion;
             }),
+            catchError(this.handleError(payload.action, null))
+        );
+    }
+
+    getFakeAuth(): Observable<TwitchAuth> {
+        const payload = {
+            action: 'fakeauth'
+        }
+
+        return this.authHttp.postInsecure<TwitchAuth>(this.broadcasterUrl, payload).pipe(
+            tap(auth => { this.messageService.add("faked!")}),
             catchError(this.handleError(payload.action, null))
         );
     }
