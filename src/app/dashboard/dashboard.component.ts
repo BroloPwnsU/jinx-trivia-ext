@@ -26,9 +26,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("dashboard component");
     this.loadQuizList();
-    this.messageService.add("dashboard component finished init.");
   }
 
 }

@@ -1,6 +1,6 @@
 
 <div>
-  <a href="#" routerLink="dashboard">Back to quiz list</a>
+  <a mat-stroked-button href="#" routerLink="dashboard">Back to quiz list</a>
 </div>
 
 <div *ngIf="quiz == null">
@@ -8,18 +8,12 @@
 </div>
 <div *ngIf="quiz">
   <h3>
-    Quiz #{{quiz.QuizID}}: {{quiz.Title}}
+    Quiz: {{quiz.Title}}
   </h3>
-  <div>
-    <button (click)="startQuiz()">Start Quiz</button>
-  </div>
-  <div class="description">
+  <div class="quiz-description">
     {{quiz.Description}}
-  </div>
-  <div>
-    Times Taken: {{quiz.TimesTaken}}
-  </div>
-  <div>
-    {{quiz.NumberOfQuestions}} Questions
+    <br />
+    <br />
+    <button mat-raised-button color="primary" (click)="startQuiz()">Play this Quiz</button>
   </div>
 </div>

@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  devMode: true
+  devMode: true,
+  questionTimerSeconds: 100,
+  answerTimerSeconds: 100,
+  pubsubBufferSeconds: 1
 };
 
 /*

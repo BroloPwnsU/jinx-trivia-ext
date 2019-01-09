@@ -1,51 +1,86 @@
-<p>
-  <a href="#" routerLink="/dashboard">Back to Dashboard</a>
-</p>
-<div *ngIf="currentQuestion != null">
-  <div *ngIf="hostMode">
-    <app-quiz-manager></app-quiz-manager>
-  </div>
 
-  <div *ngIf="timerRemaining > 0" class="question-timer">
-      Timer: {{timerRemaining}} seconds
+
+<div *ngIf="quizOver">
+    <h3>
+      Quiz Complete!
+    </h3>
+    <div>
+      Your score: <span class="your-score">{{activeQuiz.MyScore}}</span>/{{activeQuiz.NumberOfQuestions}}
     </div>
-  <div>
-    Question {{activeQuiz.CurrentQuestionIndex + 1}} of {{activeQuiz.NumberOfQuestions}}:
-    <br />
-    {{currentQuestion.Caption}}
-  </div>
-  <div *ngIf="currentQuestion.CorrectAnswer != null">
-    <div *ngIf="correct" class="">
-      Correct!
+    <div>
+      <img *ngIf="activeQuiz.MyScore <= 2" href="https://media.giphy.com/media/10C5xbZwvsFs64/giphy.gif" />
+      <img *ngIf="activeQuiz.MyScore > 2 && activeQuiz.MyScore <= 5" href="https://media.giphy.com/media/1014RBn4HVSTK/giphy.gif" />
+      <img *ngIf="activeQuiz.MyScore > 5 && activeQuiz.MyScore <= 8" href="https://media.giphy.com/media/3oriNLnYCrAj1Rg7qE/giphy.gif" />
+      <img *ngIf="activeQuiz.MyScore > 8" href="https://media.giphy.com/media/VLEVIXIAjbksg/giphy.gif" />
     </div>
-    <div *ngIf="correct == false" class="">
-      Wrong!
-    </div>
-    <div class="correct-answer">
-      Correct Answer: {{currentQuestion.CorrectAnswer.Letter}} {{currentQuestion.CorrectAnswer.Caption}}
-    </div>
-    <div class="explanation">
-      {{currentQuestion.CorrectAnswer.Description}}
-    </div>
-  </div>
-  <div *ngIf="waitingForNext">
-    Waiting for next question...
-  </div>
-  <div *ngIf="selectedAnswer != null">
-    My Answer:
-    {{selectedAnswer.Letter}} - {{selectedAnswer.Caption}}
-  </div>
-  <div *ngIf="selectedAnswer == null && waitingForNext == false">
-    <ul>
-      <li *ngFor="let answer of currentQuestion.Answers">
-        <button *ngIf="hostMode == false && selectedAnswer == null" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
-        {{answer.Caption}}
+    <ol>
+      <li *ngFor="let question of activeQuiz.Questions">
+        <div>
+          {{question.Caption}}
+          <br />
+          <span *ngIf="question.MyScore > 0">Correct</span>
+          <span *ngIf="question.MyScore <= 0">Wrong</span>
+        </div>
       </li>
-    </ul>
-  </div>
+    </ol>
 </div>
-<div *ngIf="currentQuestion == null" class="question-loading">
-  Please wait while we load the next question...
-  <br />
-  --Loading image--
+<div *ngIf="quizOver == false">
+    <div *ngIf="currentQuestion == null" class="quiz-starting">
+      The quiz will start shortly...
+    </div>
+    <div *ngIf="currentQuestion != null">
+
+      <div class="question-number">
+        Question {{activeQuiz.CurrentQuestionIndex + 1}} of {{activeQuiz.NumberOfQuestions}}
+      </div>
+      
+      <!-- Timer Bar -->
+      <div *ngIf="timerRemaining > 0" class="question-timer">
+        <mat-progress-bar mode="determinate" [value]="(timerRemaining / timerStartValue) * 100.0" stroke></mat-progress-bar>
+      </div>
+
+      <div class="question-body">
+        {{currentQuestion.Caption}}
+      </div>
+
+      <!--Answer List-->
+      <div *ngIf="currentQuestion.CorrectAnswer == null && selectedAnswer == null && waitingForNext == false">
+        <ul class="answer-list">
+          <li *ngFor="let answer of currentQuestion.Answers">
+            <div *ngIf="currentQuestion.SelectedAnswer == null || answer == currentQuestion.SelectedAnswer">
+              <button mat-raised-button color="primary" (click)="chooseAnswer(answer)">{{answer.Letter}}</button>
+              <span class="answer-caption">
+                {{answer.Caption}}
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!--Correct Answer -->
+      <div *ngIf="currentQuestion.CorrectAnswer != null">
+        <div *ngIf="correct" class="">
+          Correct!
+        </div>
+        <div *ngIf="correct == false" class="">
+          Wrong!
+        </div>
+        <div class="correct-answer">
+          Correct Answer: {{currentQuestion.CorrectAnswer.Letter}} {{currentQuestion.CorrectAnswer.Caption}}
+        </div>
+        <div class="explanation">
+          {{currentQuestion.CorrectAnswer.Description}}
+        </div>
+      </div>
+      <div *ngIf="selectedAnswer != null">
+        My Answer:
+        {{selectedAnswer.Letter}} - {{selectedAnswer.Caption}}
+      </div>
+
+      <div *ngIf="waitingForNext" class="waiting-for-question">
+        Waiting for next question...
+        <br />
+        <mat-progress-bar diameter="50"></mat-progress-bar>
+      </div>
+    </div>
 </div>

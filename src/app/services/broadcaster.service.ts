@@ -26,7 +26,6 @@ export class BroadcasterService implements OnInit {
 
         //Won't get the questions, just the quiz titles and basic deets.
         return this.authHttp.post<Quiz>(this.broadcasterUrl, JSON.stringify(payload)).pipe(
-            tap(blah => { this.messageService.debug("getquizlist response: " + blah); if ((<any>blah).toker != null) this.messageService.debug("toker: " + (<any>blah).toker); }),
             catchError(this.handleError(payload.action, null))
         );
     }
@@ -59,32 +58,45 @@ export class BroadcasterService implements OnInit {
         );
     }
 
-    nextQuestion(): Observable<Quiz> {
+    nextQuestion(): Observable<any> {
         const payload = {
             action: 'nextquestion',
             QuizID: this.activeQuiz.QuizID
         };
 
-        return this.authHttp.post<Quiz>(this.broadcasterUrl, payload).pipe(
-            tap(quiz => {
+        return this.authHttp.post<any>(this.broadcasterUrl, payload).pipe(
+            /*tap(quiz => {
                 //First save the last question.
                 this.activeQuiz[quiz.CurrentQuestionIndex] = this.activeQuiz.NextQuestion;
 
                 //Now set the next question from the one that was returned.
                 this.activeQuiz.CurrentQuestionIndex = quiz.CurrentQuestionIndex;
                 this.activeQuiz.NextQuestion = quiz.NextQuestion;
-            }),
+            }),*/
             catchError(this.handleError(payload.action, null))
         );
     }
 
-    getFakeAuth(): Observable<TwitchAuth> {
+    getFakeToken(): Observable<string> {
         const payload = {
-            action: 'fakeauth'
+            action: 'faketoken'
+        }
+
+        return this.authHttp.postInsecure<string>(this.broadcasterUrl, payload).pipe(
+            tap(auth => { this.messageService.add("faked! " + auth)}),
+            catchError(this.handleError(payload.action, null))
+        );
+    }
+
+    verifyUserAuth(token: string): Observable<TwitchAuth> {
+        //Verify the token details in the backend.
+        const payload = {
+            action: 'verifyauth',
+            token: token
         }
 
         return this.authHttp.postInsecure<TwitchAuth>(this.broadcasterUrl, payload).pipe(
-            tap(auth => { this.messageService.add("faked!")}),
+            //tap(auth => { this.messageService.add("faked!")}),
             catchError(this.handleError(payload.action, null))
         );
     }

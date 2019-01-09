@@ -10,7 +10,7 @@ export class AuthHttpClient {
 
   get<T>(url: string): Observable<T> {
       const header = new HttpHeaders({
-          'Authorization': this.userService.userAuth.token
+          'Authorization': this.userService.userAuth.Token
       });
 
       return <Observable<T>>this.http.get(
@@ -21,7 +21,7 @@ export class AuthHttpClient {
 
   post<T>(url: string, data): Observable<T> {
       const header = new HttpHeaders({
-          'Authorization': this.userService.userAuth.token
+          'Authorization': this.userService.userAuth.Token
       });
       return <Observable<T>>this.http.post(
           url
@@ -36,16 +36,6 @@ export class AuthHttpClient {
           url
           , data
       );
-  }
-
-  appendAuthParams(authUrl: string): string {
-    let authParams: string = this.userService.buildUserAuthParams(false);
-    if (authUrl.indexOf("?") > -1) {
-      return authUrl + "&" + authParams;
-    }
-    else {
-      return authUrl + "?" + authParams;
-    }
   }
 
   constructor(

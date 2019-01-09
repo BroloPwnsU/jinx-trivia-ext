@@ -17,23 +17,14 @@ export class UserService  {
 	accessToken: string;
 	accessTokenStorageKey: string = 'app-access-token';
     
-    private fakeTwitchAuth(): TwitchAuth {
-        
-        let auth = new TwitchAuth();
-        auth.token = 'dude';
-        auth.userId = 'bro';
-        auth.channelId = '999999999';
-        return auth;
-	}
-
 	private loadTwitchAuth(theKey: string): TwitchAuth {
 		let obj = JSON.parse(this.loadSomething(theKey));
 		
 		if (obj != null) {
 			let auth = new TwitchAuth();
-			auth.token = obj.token;
-			auth.userId = obj.userId;
-			auth.channelId = obj.channelId;
+			auth.Token = obj.Token;
+			auth.UserID = obj.UserID;
+			auth.ChannelID = obj.ChannelID;
 			return auth;
 		}
 
@@ -98,18 +89,6 @@ export class UserService  {
 		return this.userAuth;
 	}
 	
-	buildUserAuthParams(prependAmp: boolean) : string {
-		if (this.userAuth == null) {
-			return null;
-		}
-
-		let optionalAmp: string = (prependAmp) ? '&' : '';
-
-		return `${optionalAmp}token=${this.userAuth.token}&userid=${this.userAuth.userId}&channelid=${this.userAuth.channelId}`;
-	}
-
-	
-
 	constructor(
 		private messageService: MessageService,
 		private router: Router

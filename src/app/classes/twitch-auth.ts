@@ -1,11 +1,13 @@
 export class TwitchAuth {
-    token: string;
-    userId: string;
-    channelId: string;
+    Token: string;
+    ChannelID: string;
+    UserID: string;
+    Role: string;
 
     isEmpty(): boolean {
-        return (this.token == null || this.token == '')
-            && (this.channelId == null || this.channelId == '')
-            && (this.userId == null || this.userId == '');
+        return (this.Token == null || this.Token == '')
+            && (this.ChannelID == null || this.ChannelID == '')
+            && (this.UserID == null || this.UserID == '')
+            && (this.Role == null || this.Role == '');
     }
 }
