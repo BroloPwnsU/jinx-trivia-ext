@@ -30,7 +30,7 @@ export class QuizDetailComponent implements OnInit {
     //Create a TwitchChannel record, if necessary.
     //Set the TwitchChannel ActiveQuizID setting to this quiz ID
     this.broadcasterService.startQuiz(this.quiz.QuizID).subscribe(
-      (quiz) => { this.router.navigateByUrl('/active'); },
+      (quiz) => { this.router.navigateByUrl('/manager'); },
       (err) => { this.messageService.add(err); }
     );
     //Redirect to the active quiz page. This page will have the timer that

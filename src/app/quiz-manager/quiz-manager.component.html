@@ -1,4 +1,5 @@
-
-  <div>
-    <button (click)="nextQuestion()">Next Question</button>
-  </div>
+<div class="manager">
+  <a mat-stroked-button href="#" routerLink="/dashboard">Dashboard</a>
+  <button *ngIf="quizEnded == false" mat-raised-button color="warn" (click)="nextQuestion()">{{quizStarted ? "Next Question" : "Start Quiz"}}</button>
+</div>
+<app-quiz-active></app-quiz-active>

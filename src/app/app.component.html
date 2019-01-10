@@ -1,9 +1,20 @@
-<h1>Trivia!</h1>
+<div class="mode">
+    [Mode - {{role}}]
+</div>
 
 <div *ngIf="authLoaded">
     <router-outlet></router-outlet>
 </div>
-<div *ngIf="authLoaded == false">
-    <button (click)="fakeAuth()">Fake Auth</button>
+<div *ngIf="authLoaded == false && authError == false">
+    <br />
+    <br />
+    <mat-spinner></mat-spinner>
+    <br />
+    <br />
 </div>
+<div *ngIf="authError == true">
+    Invalid Twitch authentication. Please refresh the page and try again.
+</div>
+<br />
+<hr />
 <app-messages></app-messages>

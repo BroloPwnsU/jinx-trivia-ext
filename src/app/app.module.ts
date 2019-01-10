@@ -12,6 +12,12 @@ import { QuizDetailComponent } from './quiz-detail/quiz-detail.component';
 import { QuizActiveComponent } from './quiz-active/quiz-active.component';
 import { QuizManagerComponent } from './quiz-manager/quiz-manager.component';
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatIconModule} from '@angular/material/icon';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +32,12 @@ import { QuizManagerComponent } from './quiz-manager/quiz-manager.component';
   imports: [
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -37,17 +37,13 @@
       //The 'tunnel' must be able to initialize from either end.
       if (window.twitchTunnel != null) {
         //App is started. Pass the data in directly.
-        window.twitchTunnel.setTwitchAuth({token: auth.token, userId: auth.userId, channelId: auth.channelId});
+        window.twitchTunnel.verifyUserToken(auth.token);
       }
       else {
         //If the twitch tunnel hasn't been opened yet by our app, drill it from this side.
         //The app will read this info when it loads.
         window.twitchTunnel = {
-          authObject: {
-            token: auth.token,
-            userId: auth.userId,
-            channelId: auth.channelId
-          }
+          token: token
         };
       }
     });
