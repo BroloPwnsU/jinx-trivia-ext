@@ -32,6 +32,27 @@ ul.answer-list li span.answer-caption {
     font-size: 1.1em;
 }
 
+span.score-marker {
+    display: inline-block;
+    width: 65px;
+    text-align: center;
+}
+
+span.score-bad {
+    color: red;
+}
+
+span.score-good {
+    color: green;
+}
+
+div.correct-answer-header {
+    margin-top: 10px;
+    font-size: .8em;
+    color: #999;
+    font-style: italic;
+}
+
 .mode {
     color: #aaa;
     padding-bottom: 5px;
@@ -54,4 +75,12 @@ ul.answer-list li span.answer-caption {
     padding: 10px;
     font-style: italic;
     font-size: 1.1em;
+}
+
+.intimidation-panel {
+    text-align: center;
+    padding: 5px;
+    margin: 5px;
+    border: 2px solid black;
+    border-radius: 8px;
 }

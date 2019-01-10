@@ -101,6 +101,19 @@ export class BroadcasterService implements OnInit {
         );
     }
 
+    sendSocial(socialAction: string): Observable<string> {
+        //"intimidate"
+        const payload = {
+            action: 'sendsocial',
+            UserID: this.userService.userAuth.UserID,
+            SocialAction: socialAction
+        }
+
+        return this.authHttp.post<string>(this.broadcasterUrl, payload).pipe(
+            catchError(this.handleError(payload.action, null))
+        );
+    }
+
 	/**
 	 * Handle Http operation that failed.
 	 * Let the app continue.

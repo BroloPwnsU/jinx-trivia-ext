@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   devMode: true,
-  questionTimerSeconds: 100,
-  answerTimerSeconds: 100,
-  pubsubBufferSeconds: 1
+  questionTimerSeconds: 10,
+  answerTimerSeconds: 10,
+  pubsubBufferSeconds: 1,
+  intimidationTimerSeconds: 5
 };
 
 /*

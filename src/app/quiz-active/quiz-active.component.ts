@@ -5,6 +5,7 @@ import { MessageService } from '../services/message.service';
 import { BroadcasterService } from '../services/broadcaster.service';
 import { Router } from '@angular/router';
 import {environment} from '../../environments/environment';
+import { UserService } from '../services/user.service';
 
 declare var window: any;
 const nextQuestionTargetTopic: string = "nextquestion"; 
@@ -36,7 +37,12 @@ export class QuizActiveComponent implements OnInit {
   waitingForNext: boolean = false;
   quizOver: boolean = false;
 
-  listenForQuestions(): void {
+  availableIntimidations: number = 3;
+  intimidated: boolean = false;
+  intimidator: string = "";
+  intimidationTimer: number = environment.intimidationTimerSeconds;
+
+  listenToPubsub(): void {
     //Starts listening for questions to come in over the "nextquestion" blurb
     this.messageService.debug("Listening for broadcast.");
     
@@ -46,10 +52,16 @@ export class QuizActiveComponent implements OnInit {
       //Need to use the zone because this function might get called out of the angular app pipeline.
       // Running this code in the zone makes sure that changes to the data model get enforced in the view.
       this.zone.run(() => {
+        if (payloadData.message.action == "intimidate") {
+          //Don't let us intimidate ourselves, and don't let us re-intimidate if we're already timid.
+          if (!this.intimidated && payloadData.message.UserID != this.userService.userAuth.UserID) {
+            
+            this.intimidated = true;
+            this.intimidator = payloadData.message.UserID;
 
-        console.log("fuck this too2: " + payloadData.message.action);
-        //Only handle messages that ask for the next question.
-        this.messageService.debug("pubsub action: " + payloadData.message.action);
+            setTimeout(() => {this.intimidated = false;}, this.intimidationTimer * 1000);
+          }
+        }
         if (payloadData.message.action == "nextquestion") {
       
           //The wait is over!
@@ -161,11 +173,11 @@ export class QuizActiveComponent implements OnInit {
 
   startResultsScreen(): void {
     this.activeQuiz.MyScore = 0;
-    for(let questor of this.activeQuiz.Questions) {
-      questor.MyScore = 0;
-      if (questor.SelectedAnswer != null && questor.CorrectAnswer != null
-        && questor.SelectedAnswer.Letter == questor.CorrectAnswer.Letter) {
-          questor.MyScore = 1;
+    for(let question of this.activeQuiz.Questions) {
+      question.MyScore = 0;
+      if (question.SelectedAnswer != null && question.CorrectAnswer != null
+        && question.SelectedAnswer.Letter == question.CorrectAnswer.Letter) {
+          question.MyScore = 1;
           this.activeQuiz.MyScore++;
       }
     }
@@ -191,15 +203,40 @@ export class QuizActiveComponent implements OnInit {
     this.currentQuestion.SelectedAnswer = answer;
   }
 
+  sendIntimidation(): void {
+    if (this.availableIntimidations > 0) {
+      this.availableIntimidations--;
+
+      this.broadcasterService.sendSocial("intimidate").subscribe(
+        (body) => { this.messageService.debug("BODY: " + JSON.stringify(body)); },
+        (err) => { this.messageService.debug("ERR: " + JSON.stringify(err)); }
+      );
+      /*
+      window.Twitch.ext.send(
+        "broadcast",
+        "application/json",
+        {
+          "content_type":"application/json",
+          "message": {
+            "action": "intimidate",
+            "UserID": this.userService.userAuth.UserID
+          },
+          "targets":["broadcast"]
+        }
+      );*/
+    }
+  }
+
   constructor(
     private broadcasterService: BroadcasterService,
     private messageService: MessageService,
     private router: Router,
-    private zone: NgZone
+    private zone: NgZone,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
-    this.listenForQuestions();
+    this.listenToPubsub();
   }
 
 }
