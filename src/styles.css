@@ -84,3 +84,7 @@ div.correct-answer-header {
     border: 2px solid black;
     border-radius: 8px;
 }
+
+img.reward-image {
+    width: 100%;
+}

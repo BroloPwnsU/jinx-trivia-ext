@@ -8,10 +8,10 @@
       Your score: <span class="your-score">{{activeQuiz.MyScore}}</span>/{{activeQuiz.NumberOfQuestions}}
     </div>
     <div>
-      <img *ngIf="activeQuiz.MyScore <= 2" src="https://media.giphy.com/media/10C5xbZwvsFs64/giphy.gif" />
-      <img *ngIf="activeQuiz.MyScore > 2 && activeQuiz.MyScore <= 5" src="https://media.giphy.com/media/1014RBn4HVSTK/giphy.gif" />
-      <img *ngIf="activeQuiz.MyScore > 5 && activeQuiz.MyScore <= 8" src="https://media.giphy.com/media/3oriNLnYCrAj1Rg7qE/giphy.gif" />
-      <img *ngIf="activeQuiz.MyScore > 8" src="https://media.giphy.com/media/VLEVIXIAjbksg/giphy.gif" />
+      <img class="reward-image" *ngIf="activeQuiz.MyScore <= 2" src="https://media.giphy.com/media/10C5xbZwvsFs64/giphy.gif" />
+      <img class="reward-image" *ngIf="activeQuiz.MyScore > 2 && activeQuiz.MyScore <= 5" src="https://media.giphy.com/media/1014RBn4HVSTK/giphy.gif" />
+      <img class="reward-image" *ngIf="activeQuiz.MyScore > 5 && activeQuiz.MyScore <= 8" src="https://media.giphy.com/media/3oriNLnYCrAj1Rg7qE/giphy.gif" />
+      <img class="reward-image" *ngIf="activeQuiz.MyScore > 8" src="https://media.giphy.com/media/VLEVIXIAjbksg/giphy.gif" />
     </div>
     <ol>
       <li *ngFor="let question of activeQuiz.Questions">
